@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BH List</string>
+    <string name="listener_label">BH List · 群消息抓取</string>
+    <string name="share_label">导入到 BH List</string>
+</resources>

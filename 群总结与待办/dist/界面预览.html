@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BH List · 界面预览</title>
+<style>
+  :root{
+    --primary:#3E7BFA;
+    --container:#E8F1FE;
+    --on-container:#0B2B66;
+    --bg:#F7FAFF;
+    --surface:#FFFFFF;
+    --text:#1E293B;
+    --sub:#64748B;
+    --outline:#DCE7F7;
+    --amber:#F59E0B;
+    --red:#EF4444;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:#EEF3FB;color:var(--text);padding:32px 20px 60px;
+  }
+  .page-title{text-align:center;font-size:22px;font-weight:600;margin-bottom:6px}
+  .page-sub{text-align:center;color:var(--sub);font-size:13px;margin-bottom:28px}
+  .phones{display:flex;gap:28px;justify-content:center;flex-wrap:wrap;align-items:flex-start}
+  .phone{
+    width:340px;height:720px;background:var(--bg);border-radius:32px;overflow:hidden;
+    box-shadow:0 18px 50px rgba(30,41,59,.16),0 0 0 8px #fff,0 0 0 9px var(--outline);
+    display:flex;flex-direction:column;position:relative;
+  }
+  .statusbar{height:30px;display:flex;justify-content:space-between;align-items:center;padding:0 18px;font-size:11px;color:var(--sub)}
+  .appbar{display:flex;align-items:center;padding:6px 18px 10px;gap:10px}
+  .appbar h1{font-size:21px;font-weight:600;flex:1}
+  .icon{width:22px;height:22px;border-radius:6px;border:1.5px solid var(--sub);opacity:.75;position:relative}
+  .icon.search::after{content:"";position:absolute;width:7px;height:7px;border:1.5px solid var(--sub);border-radius:50%;top:3px;left:3px}
+  .icon.gear{border-radius:50%}
+  .icon.back{border:none}
+  .icon.back::before{content:"‹";font-size:26px;line-height:18px;color:var(--text)}
+  .content{flex:1;overflow:auto;padding:0 16px 16px}
+  .banner{
+    background:var(--container);border-radius:16px;padding:12px 14px;display:flex;align-items:center;gap:10px;margin-bottom:10px;
+  }
+  .banner .dot{width:8px;height:8px;border-radius:50%;background:var(--primary)}
+  .banner strong{font-size:13px;color:var(--on-container);display:block}
+  .banner span{font-size:11px;color:#4A6DA8}
+  .banner .arrow{margin-left:auto;color:var(--on-container);font-size:18px}
+  .chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:10px;margin-bottom:2px}
+  .chip{
+    flex:0 0 auto;padding:7px 13px;border-radius:999px;border:1px solid var(--outline);
+    font-size:12px;color:var(--sub);background:transparent;white-space:nowrap;
+  }
+  .chip.active{background:var(--container);border-color:var(--container);color:var(--on-container);font-weight:600}
+  .card{
+    background:var(--surface);border:1px solid var(--outline);border-radius:16px;padding:12px 12px 11px;margin-bottom:10px;
+    display:flex;gap:9px;align-items:flex-start;
+  }
+  .check{width:19px;height:19px;border:1.8px solid #B9CBE8;border-radius:5px;margin-top:2px;flex:0 0 auto}
+  .check.done{background:var(--primary);border-color:var(--primary);position:relative}
+  .check.done::after{content:"✓";color:#fff;font-size:13px;position:absolute;left:2.5px;top:-2px}
+  .card-main{flex:1;min-width:0}
+  .card-title{font-size:15px;font-weight:600;line-height:1.35;margin-bottom:3px}
+  .card-title .pin{color:var(--primary);font-size:12px;margin-right:3px}
+  .card-desc{font-size:12px;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:7px}
+  .meta{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+  .tag{background:var(--container);color:var(--on-container);font-size:10.5px;padding:2px 7px;border-radius:6px}
+  .deadline{font-size:10.5px;color:var(--primary);display:flex;align-items:center;gap:3px}
+  .deadline.soon{color:var(--amber)}
+  .deadline.over{color:var(--red)}
+  .more{margin-left:auto;color:#B4C2D6;letter-spacing:1px;font-size:16px;line-height:1}
+  .done .card-title{text-decoration:line-through;color:var(--sub);font-weight:500}
+  .done{background:#F1F5FB}
+  .fab{
+    position:absolute;right:20px;bottom:22px;width:54px;height:54px;border-radius:18px;background:var(--primary);
+    color:#fff;font-size:30px;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 20px rgba(62,123,250,.35);
+  }
+  .group-title{font-size:12px;font-weight:600;color:var(--sub);margin:12px 2px 6px}
+  .msg{background:var(--surface);border:1px solid var(--outline);border-radius:14px;padding:10px 10px 10px 12px;margin-bottom:8px;display:flex;gap:8px}
+  .msg-main{flex:1;min-width:0}
+  .msg-head{display:flex;align-items:baseline;gap:6px;margin-bottom:3px}
+  .msg-sender{font-size:12px;font-weight:600;color:var(--primary)}
+  .msg-time{font-size:10px;color:var(--sub)}
+  .msg-body{font-size:13px;line-height:1.5}
+  .msg-x{color:#B4C2D6;font-size:17px;line-height:16px;padding:0 2px}
+  .thumb{width:52px;height:52px;border-radius:8px;margin-top:7px;background:linear-gradient(135deg,#D7E6FF,#A9C6FF);border:1px solid #C7DAF7}
+  .bottombar{border-top:1px solid var(--outline);background:#FBFDFF;padding:12px 16px 18px}
+  .hint{font-size:10.5px;color:var(--sub);margin-bottom:7px}
+  .btn{display:block;width:100%;background:var(--primary);color:#fff;border:none;border-radius:14px;padding:14px;font-size:15px;font-weight:600;text-align:center}
+  .btn.ghost{background:transparent;color:var(--primary);border:1px solid var(--primary)}
+  .field{border:1px solid var(--outline);border-radius:12px;background:var(--surface);padding:11px 12px;font-size:14px;margin-bottom:9px}
+  .field .label{font-size:10.5px;color:var(--sub);margin-bottom:2px}
+  .field.big{min-height:96px;line-height:1.6}
+  .rowline{display:flex;align-items:center;justify-content:space-between;background:var(--surface);border:1px solid var(--outline);border-radius:12px;padding:12px;margin-bottom:9px;font-size:14px}
+  .switch{width:36px;height:21px;border-radius:99px;background:var(--primary);position:relative}
+  .switch::after{content:"";position:absolute;width:17px;height:17px;background:#fff;border-radius:50%;top:2px;right:2px}
+  .imgrow{display:flex;gap:8px;margin-bottom:9px}
+  .img{width:66px;height:66px;border-radius:10px;background:linear-gradient(135deg,#D7E6FF,#A9C6FF);border:1px solid #C7DAF7}
+  .img.add{border:1px dashed #A9C6FF;background:transparent;color:var(--primary);display:flex;align-items:center;justify-content:center;font-size:24px}
+  .danger{background:#FDECEC;color:var(--red);border:none;border-radius:14px;padding:13px;width:100%;font-size:14px;font-weight:600;margin-top:8px}
+  .note{text-align:center;color:var(--sub);font-size:12px;margin-top:26px;line-height:1.8}
+</style>
+</head>
+<body>
+  <div class="page-title">BH List · 界面预览</div>
+  <div class="page-sub">淡蓝、简洁、卡片式；左侧为首页，中间为待整理，右侧为编辑页</div>
+
+  <div class="phones">
+
+    <!-- 首页 -->
+    <div class="phone">
+      <div class="statusbar"><span>9:41</span><span>5G ▮▮▮ 88%</span></div>
+      <div class="appbar">
+        <h1>BH List</h1>
+        <div class="icon search"></div>
+        <div class="icon gear"></div>
+      </div>
+      <div class="content">
+        <div class="banner">
+          <div class="dot"></div>
+          <div><strong>待整理 12 条消息</strong><span>点一下把它们变成待办</span></div>
+          <div class="arrow">›</div>
+        </div>
+
+        <div class="chips">
+          <div class="chip active">全部</div>
+          <div class="chip">已完成</div>
+          <div class="chip">计科2301</div>
+          <div class="chip">社团通知</div>
+        </div>
+
+        <div class="card">
+          <div class="check"></div>
+          <div class="card-main">
+            <div class="card-title"><span class="pin">★</span>提交团日活动报名表</div>
+            <div class="card-desc">周五18:00前交给班长，记得带学生证</div>
+            <div class="meta"><span class="tag">计科2301</span><span class="deadline soon">11月20日 18:00</span></div>
+          </div>
+          <div class="more">⋮</div>
+        </div>
+
+        <div class="card">
+          <div class="check"></div>
+          <div class="card-main">
+            <div class="card-title">填写奖学金信息统计表</div>
+            <div class="card-desc">在线表格链接见群公告，本周内完成</div>
+            <div class="meta"><span class="tag">计科2301</span><span class="deadline">11月22日 截止</span></div>
+          </div>
+          <div class="more">⋮</div>
+        </div>
+
+        <div class="card">
+          <div class="check"></div>
+          <div class="card-main">
+            <div class="card-title">周五部门例会</div>
+            <div class="card-desc">A101 教室，下午3点，带上笔记本</div>
+            <div class="meta"><span class="tag">社团通知</span><span class="deadline">11月20日 15:00</span></div>
+          </div>
+          <div class="more">⋮</div>
+        </div>
+
+        <div class="card">
+          <div class="check"></div>
+          <div class="card-main">
+            <div class="card-title">交大学英语作文</div>
+            <div class="card-desc">第5单元，电子版发到学习通</div>
+            <div class="meta"><span class="tag">英语2班</span><span class="deadline over">11月17日 已逾期</span></div>
+          </div>
+          <div class="more">⋮</div>
+        </div>
+
+        <div class="card done">
+          <div class="check done"></div>
+          <div class="card-main">
+            <div class="card-title">领取四六级准考证</div>
+            <div class="card-desc">已到教务处领取</div>
+            <div class="meta"><span class="tag">计科2301</span></div>
+          </div>
+          <div class="more">⋮</div>
+        </div>
+      </div>
+      <div class="fab">+</div>
+    </div>
+
+    <!-- 待整理 -->
+    <div class="phone">
+      <div class="statusbar"><span>9:41</span><span>5G ▮▮▮ 88%</span></div>
+      <div class="appbar">
+        <div class="icon back"></div>
+        <h1>待整理</h1>
+        <div style="font-size:12px;color:var(--primary)">粘贴导入</div>
+      </div>
+      <div class="content">
+        <div class="group-title">计科2301</div>
+
+        <div class="msg">
+          <div class="msg-main">
+            <div class="msg-head"><span class="msg-sender">班长</span><span class="msg-time">今天 14:25</span></div>
+            <div class="msg-body">请大家周五前把团日活动报名表交到我这里，记得带学生证。</div>
+          </div>
+          <div class="msg-x">×</div>
+        </div>
+
+        <div class="msg">
+          <div class="msg-main">
+            <div class="msg-head"><span class="msg-sender">学委</span><span class="msg-time">今天 13:02</span></div>
+            <div class="msg-body">奖学金信息统计表发了，本周内填完，链接在群公告里。</div>
+          </div>
+          <div class="msg-x">×</div>
+        </div>
+
+        <div class="msg">
+          <div class="msg-main">
+            <div class="msg-head"><span class="msg-sender">李同学</span><span class="msg-time">昨天 20:11</span></div>
+            <div class="msg-body">这是活动通知的截图，时间地点都在上面。</div>
+            <div class="thumb"></div>
+          </div>
+          <div class="msg-x">×</div>
+        </div>
+
+        <div class="group-title">社团通知</div>
+
+        <div class="msg">
+          <div class="msg-main">
+            <div class="msg-head"><span class="msg-sender">社长</span><span class="msg-time">昨天 18:40</span></div>
+            <div class="msg-body">@全体成员 周五下午3点A101开部门例会，带笔记本。</div>
+          </div>
+          <div class="msg-x">×</div>
+        </div>
+      </div>
+      <div class="bottombar">
+        <div class="hint">将使用 DeepSeek 总结</div>
+        <button class="btn">AI 整理成待办（12 条）</button>
+      </div>
+    </div>
+
+    <!-- 编辑 -->
+    <div class="phone">
+      <div class="statusbar"><span>9:41</span><span>5G ▮▮▮ 88%</span></div>
+      <div class="appbar">
+        <div class="icon back"></div>
+        <h1>编辑待办</h1>
+        <div style="font-size:13px;color:var(--primary);font-weight:600">保存</div>
+      </div>
+      <div class="content">
+        <div class="field"><div class="label">要做的事</div>提交团日活动报名表</div>
+        <div class="field big"><div class="label">详细内容</div>周五 18:00 前交给班长，记得带学生证。</div>
+        <div class="field"><div class="label">来自哪个群（可留空）</div>计科2301</div>
+
+        <div class="rowline">
+          <span>📅 11月20日 18:00</span>
+          <span style="color:#B4C2D6">×</span>
+        </div>
+
+        <div class="rowline"><span>置顶</span><div class="switch"></div></div>
+
+        <div class="imgrow">
+          <div class="img"></div>
+          <div class="img add">+</div>
+        </div>
+
+        <button class="danger">删除这条待办</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">
+    这是静态界面预览，用来确认配色和布局；实际 App 会跟随手机深浅色模式，并支持状态栏沉浸。<br>
+    淡蓝主色 #3E7BFA · 背景 #F7FAFF · 圆角 16dp
+  </div>
+</body>
+</html>
