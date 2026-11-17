@@ -8,6 +8,7 @@ import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -54,6 +55,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -397,12 +399,30 @@ fun SettingsScreen(
 
             item {
                 SettingsCard("关于") {
+                    val uriHandler = LocalUriHandler.current
                     Text("BH List v${BuildConfig.VERSION_NAME}", fontSize = 14.sp)
                     Text(
                         "把 QQ 群通知整理成待办卡片。数据只保存在本机；只有开启 AI 时才会把消息内容发送给 DeepSeek。",
                         fontSize = 11.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(top = 4.dp)
+                    )
+                    Text(
+                        "开发者：@huibaihui73",
+                        fontSize = 12.sp,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                    Text(
+                        "项目地址：https://github.com/huibaihui73/hbh",
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier
+                            .padding(top = 2.dp)
+                            .clickable {
+                                runCatching {
+                                    uriHandler.openUri("https://github.com/huibaihui73/hbh")
+                                }
+                            }
                     )
                     TextButton(
                         onClick = viewModel::openOnboarding,
