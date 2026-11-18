@@ -263,7 +263,7 @@ fun SettingsScreen(
                         TextButton(onClick = { showGroupDialog = true }) { Text("选择") }
                     }
                     Text(
-                        "注意：QQ 里需要开启「显示消息详情」，否则通知里没有消息内容；群消息设了免打扰就不会有通知，也抓不到。",
+                        "注意：QQ / 微信里需要开启「显示消息详情」，否则通知里没有消息内容；群消息设了免打扰就不会有通知，也抓不到。",
                         fontSize = 11.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(top = 6.dp)
@@ -412,7 +412,7 @@ fun SettingsScreen(
                     val uriHandler = LocalUriHandler.current
                     Text("BH List v${BuildConfig.VERSION_NAME}", fontSize = 14.sp)
                     Text(
-                        "把 QQ 群通知整理成待办卡片。数据只保存在本机；只有开启 AI 时才会把消息内容发送给 DeepSeek。",
+                        "把 QQ / 微信的消息整理成待办卡片。数据只保存在本机；只有开启 AI 时才会把消息内容发送给 DeepSeek。",
                         fontSize = 11.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(top = 4.dp)

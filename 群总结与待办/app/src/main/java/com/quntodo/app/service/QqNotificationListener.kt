@@ -97,7 +97,8 @@ class QqNotificationListener : NotificationListenerService() {
         private val BASE_PACKAGES = setOf(
             "com.tencent.mobileqq",
             "com.tencent.tim",
-            "com.tencent.qqlite"
+            "com.tencent.qqlite",
+            "com.tencent.mm"
         )
     }
 }

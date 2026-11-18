@@ -151,9 +151,9 @@ fun OnboardingScreen(state: UiState, viewModel: MainViewModel) {
 
             OnboardStep(
                 number = 4,
-                title = "在 QQ 里打开消息详情",
+                title = "在 QQ / 微信里打开消息详情",
                 done = false,
-                description = "打开 QQ → 设置 → 消息通知 → 打开「显示消息详情」。不打开的话，通知里只有「你收到一条消息」，软件拿不到内容。",
+                description = "QQ：设置 → 消息通知 → 打开「显示消息详情」。微信：我 → 设置 → 消息通知 → 打开「通知显示消息详情」。不打开的话，通知里只有「你收到一条消息」，软件拿不到内容。",
                 actionLabel = null,
                 actionEnabled = false,
                 onAction = {}

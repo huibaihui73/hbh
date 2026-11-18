@@ -76,7 +76,10 @@ class NotificationExtractor {
             styleTitle.isNotBlank() -> styleTitle
             conversation.isNotBlank() -> conversation
             else -> title
-        }.replace(Regex("\\(\\d+\\)$"), "").trim()
+        }
+            .replace(Regex("\\(?\\d+\\s*条新消息\\)?$"), "")
+            .replace(Regex("[（(]\\d+[)）]$"), "")
+            .trim()
 
         val parts: List<Part> = when {
             styleParts.isNotEmpty() -> styleParts

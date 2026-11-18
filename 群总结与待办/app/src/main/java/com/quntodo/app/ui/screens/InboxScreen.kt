@@ -236,7 +236,7 @@ fun InboxScreen(
                     EmptyState(
                         icon = Icons.Default.Close,
                         title = "没有待整理的消息",
-                        subtitle = "QQ 群通知会自动出现在这里；也可以在 QQ 里长按消息选择「分享」导入"
+                        subtitle = "QQ / 微信的消息会自动出现在这里；也可以从 QQ / 微信分享或粘贴导入"
                     )
                 } else {
                     LazyColumn(
