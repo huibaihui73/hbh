@@ -40,10 +40,10 @@ interface RawMessageDao {
     suspend fun countSimilar(groupKey: String, hash: String, from: Long, to: Long): Int
 
     @Query(
-        "SELECT * FROM raw_messages WHERE notificationKey = :key " +
+        "SELECT * FROM raw_messages WHERE notificationKey = :key AND groupKey = :groupKey " +
             "ORDER BY postedAt DESC, id DESC LIMIT 1"
     )
-    suspend fun latestByNotificationKey(key: String): RawMessageEntity?
+    suspend fun latestByNotificationKey(key: String, groupKey: String): RawMessageEntity?
 
     @Query("UPDATE raw_messages SET ignored = 1 WHERE id = :id")
     suspend fun markIgnored(id: Long)

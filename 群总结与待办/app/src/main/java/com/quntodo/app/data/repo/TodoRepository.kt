@@ -177,7 +177,7 @@ class TodoRepository(
         if (rawDao.countSimilar(groupKey, hash, from, to) > 0) return null
 
         if (message.notificationKey.isNotBlank()) {
-            val latest = rawDao.latestByNotificationKey(message.notificationKey)
+            val latest = rawDao.latestByNotificationKey(message.notificationKey, groupKey)
             if (latest != null) {
                 if (latest.content == message.content) return null
                 if (TextSimilarity.containsAll(latest.content, message.content)) return null

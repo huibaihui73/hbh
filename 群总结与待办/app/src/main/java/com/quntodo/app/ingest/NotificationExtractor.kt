@@ -45,6 +45,19 @@ class NotificationExtractor {
             Part(sender, content, timestamp)
         }
 
+        // QQ 的「我的电脑 / 我的平板」等设备消息：标题是「QQ」，正文是「设备名: 内容」。
+        // 单独识别成对应设备会话，避免不同设备共用同一个通知编号时互相去重。
+        if (styleParts.isEmpty()) {
+            deviceMessage(title, body)?.let { (deviceName, content) ->
+                return Result(
+                    isGroup = false,
+                    groupName = deviceName,
+                    parts = listOf(Part(deviceName, content, sbn.postTime)),
+                    generic = false
+                )
+            }
+        }
+
         val generic = JunkFilter.isGenericNotification(body) || JunkFilter.isGenericNotification(text)
         val inline = inlineSender(body)
 
@@ -91,6 +104,16 @@ class NotificationExtractor {
         return if (parsed.size == lines.size) parsed else emptyList()
     }
 
+    private fun deviceMessage(title: String, body: String): Pair<String, String>? {
+        if (!title.startsWith("QQ")) return null
+        val firstLine = body.lineSequence().firstOrNull()?.trim().orEmpty()
+        val match = DEVICE_PREFIX.find(firstLine) ?: return null
+        val deviceName = match.groupValues[1]
+        val content = match.groupValues[2].trim()
+        if (content.isEmpty()) return null
+        return deviceName to content
+    }
+
     private fun inlineSender(text: String): Pair<String, String>? {
         val match = Regex("^([^:：\\n]{1,20})\\s*[:：]\\s*(.+)$", RegexOption.DOT_MATCHES_ALL)
             .find(text.trim()) ?: return null
@@ -99,5 +122,11 @@ class NotificationExtractor {
         if (sender.isEmpty() || content.isEmpty()) return null
         if (content.length < 2) return null
         return sender to content
+    }
+
+    private companion object {
+        val DEVICE_PREFIX = Regex(
+            "^(我的电脑|我的平板|我的手机|我的设备|文件传输助手)\\s*[:：]\\s*(.+)$"
+        )
     }
 }
