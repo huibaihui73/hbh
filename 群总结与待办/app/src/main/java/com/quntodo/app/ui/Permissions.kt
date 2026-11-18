@@ -2,6 +2,7 @@ package com.quntodo.app.ui
 
 import android.Manifest
 import android.app.AlarmManager
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -9,11 +10,22 @@ import android.net.Uri
 import android.os.Build
 import android.os.PowerManager
 import android.provider.Settings
+import android.service.notification.NotificationListenerService
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import com.quntodo.app.service.QqNotificationListener
 
 fun isNotificationListenerEnabled(context: Context): Boolean =
     NotificationManagerCompat.getEnabledListenerPackages(context).contains(context.packageName)
+
+/** 请求系统把通知监听服务重新连上（相当于关闭再打开通知使用权）。 */
+fun requestListenerRebind(context: Context) {
+    runCatching {
+        NotificationListenerService.requestRebind(
+            ComponentName(context, QqNotificationListener::class.java)
+        )
+    }
+}
 
 fun openListenerSettings(context: Context) {
     runCatching {

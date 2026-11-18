@@ -7,6 +7,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.quntodo.app.ui.nav.Screen
+import com.quntodo.app.util.RuntimeState
 import com.quntodo.app.ui.screens.EditScreen
 import com.quntodo.app.ui.screens.HomeScreen
 import com.quntodo.app.ui.screens.InboxScreen
@@ -20,6 +21,7 @@ fun QunTodoRoot(viewModel: MainViewModel) {
     val context = LocalContext.current
     val resumeTick = rememberResumeTick()
     val listenerEnabled = remember(resumeTick) { isNotificationListenerEnabled(context) }
+    val listenerConnected by RuntimeState.listenerConnectedFlow.collectAsStateWithLifecycle()
 
     if (!state.loading && !state.settings.onboarded) {
         OnboardingScreen(state = state, viewModel = viewModel)
@@ -34,6 +36,8 @@ fun QunTodoRoot(viewModel: MainViewModel) {
         Screen.Home -> HomeScreen(
             state = state,
             listenerEnabled = listenerEnabled,
+            listenerConnected = listenerConnected,
+            onReconnectListener = viewModel::reconnectListener,
             onOpenInbox = viewModel::openInbox,
             onOpenSettings = viewModel::openSettings,
             onImportScreenshot = viewModel::importScreenshot,

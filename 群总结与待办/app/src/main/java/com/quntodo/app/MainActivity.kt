@@ -5,9 +5,15 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.quntodo.app.ui.MainViewModel
 import com.quntodo.app.ui.QunTodoRoot
+import com.quntodo.app.ui.isNotificationListenerEnabled
+import com.quntodo.app.ui.requestListenerRebind
 import com.quntodo.app.ui.theme.QunTodoTheme
+import com.quntodo.app.util.RuntimeState
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 
@@ -19,6 +25,27 @@ class MainActivity : ComponentActivity() {
         setContent {
             QunTodoTheme {
                 QunTodoRoot(viewModel)
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        ensureListenerConnected()
+    }
+
+    /**
+     * 部分机型（尤其 vivo）在后台清理或 App 更新后会解绑通知监听服务。
+     * 打开 App 时如果发现服务没连上，主动请求系统重新绑定。
+     */
+    private fun ensureListenerConnected() {
+        if (!isNotificationListenerEnabled(this)) return
+        if (RuntimeState.listenerConnected) return
+        requestListenerRebind(this)
+        lifecycleScope.launch {
+            delay(1500)
+            if (!RuntimeState.listenerConnected) {
+                requestListenerRebind(this@MainActivity)
             }
         }
     }

@@ -60,6 +60,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.quntodo.app.BuildConfig
 import com.quntodo.app.data.db.entity.TodoEntity
 import com.quntodo.app.reminders.NotificationHelper
@@ -85,6 +86,7 @@ fun SettingsScreen(
     val context = LocalContext.current
     val tick = rememberResumeTick()
     val listenerEnabled = remember(tick) { isNotificationListenerEnabled(context) }
+    val listenerConnected by RuntimeState.listenerConnectedFlow.collectAsStateWithLifecycle()
     val exactAlarm = remember(tick) { canScheduleExactAlarms(context) }
     val batteryOk = remember(tick) { isIgnoringBatteryOptimizations(context) }
     val notificationsOk = remember(tick) { hasPostNotifications(context) }
@@ -227,6 +229,14 @@ fun SettingsScreen(
                         actionLabel = if (listenerEnabled) "已开启" else "去开启",
                         actionEnabled = !listenerEnabled
                     ) { openListenerSettings(context) }
+                    if (listenerEnabled) {
+                        HStackStatus(
+                            title = "监听服务",
+                            ok = listenerConnected,
+                            actionLabel = if (listenerConnected) "已连接" else "重新连接",
+                            actionEnabled = !listenerConnected
+                        ) { viewModel.reconnectListener() }
+                    }
                     SwitchRow(
                         label = "也抓取私聊消息",
                         checked = state.settings.capturePrivateChats,

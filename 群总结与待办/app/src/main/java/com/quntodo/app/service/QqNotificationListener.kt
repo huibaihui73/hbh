@@ -23,12 +23,12 @@ class QqNotificationListener : NotificationListenerService() {
 
     override fun onListenerConnected() {
         super.onListenerConnected()
-        RuntimeState.listenerConnected = true
+        RuntimeState.setListenerConnected(true)
     }
 
     override fun onListenerDisconnected() {
         super.onListenerDisconnected()
-        RuntimeState.listenerConnected = false
+        RuntimeState.setListenerConnected(false)
         runCatching {
             NotificationListenerService.requestRebind(
                 ComponentName(this, QqNotificationListener::class.java)
@@ -89,7 +89,7 @@ class QqNotificationListener : NotificationListenerService() {
 
     override fun onDestroy() {
         scope.cancel()
-        RuntimeState.listenerConnected = false
+        RuntimeState.setListenerConnected(false)
         super.onDestroy()
     }
 

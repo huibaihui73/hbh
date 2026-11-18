@@ -1,12 +1,28 @@
 package com.quntodo.app.util
 
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+
 object RuntimeState {
-    @Volatile var listenerConnected: Boolean = false
+
+    private val _listenerConnected = MutableStateFlow(false)
+    val listenerConnectedFlow: StateFlow<Boolean> = _listenerConnected.asStateFlow()
+
+    @Volatile
+    var listenerConnected: Boolean = false
+        private set
+
     @Volatile var lastCaptureAt: Long = 0L
     @Volatile var lastCaptureCount: Int = 0
     @Volatile var lastError: String? = null
     @Volatile var genericNotificationSeen: Boolean = false
     @Volatile var aiLastError: String? = null
+
+    fun setListenerConnected(connected: Boolean) {
+        listenerConnected = connected
+        _listenerConnected.value = connected
+    }
 
     fun error(message: String) {
         lastError = message.take(300)

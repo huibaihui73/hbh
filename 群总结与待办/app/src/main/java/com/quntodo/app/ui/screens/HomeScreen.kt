@@ -67,6 +67,8 @@ import com.quntodo.app.ui.openListenerSettings
 fun HomeScreen(
     state: UiState,
     listenerEnabled: Boolean,
+    listenerConnected: Boolean,
+    onReconnectListener: () -> Unit,
     onOpenInbox: () -> Unit,
     onOpenSettings: () -> Unit,
     onImportScreenshot: (Uri) -> Unit,
@@ -208,7 +210,7 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            if (!listenerEnabled) {
+            if (!listenerEnabled || !listenerConnected) {
                 Surface(
                     color = MaterialTheme.colorScheme.surfaceVariant,
                     shape = MaterialTheme.shapes.medium,
@@ -228,13 +230,28 @@ fun HomeScreen(
                         )
                         Spacer(Modifier.width(8.dp))
                         Text(
-                            "通知抓取未开启，群消息不会自动进来",
+                            if (!listenerEnabled) {
+                                "通知抓取未开启，群消息不会自动进来"
+                            } else {
+                                "通知监听未连接，群消息可能进不来"
+                            },
                             fontSize = 12.sp,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.weight(1f)
                         )
-                        TextButton(onClick = { openListenerSettings(context) }) {
-                            Text("去开启", fontSize = 12.sp)
+                        TextButton(
+                            onClick = {
+                                if (!listenerEnabled) {
+                                    openListenerSettings(context)
+                                } else {
+                                    onReconnectListener()
+                                }
+                            }
+                        ) {
+                            Text(
+                                if (!listenerEnabled) "去开启" else "重连",
+                                fontSize = 12.sp
+                            )
                         }
                     }
                 }

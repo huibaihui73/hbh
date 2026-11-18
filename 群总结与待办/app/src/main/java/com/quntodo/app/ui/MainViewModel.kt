@@ -462,6 +462,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun reconnectListener() {
+        requestListenerRebind(getApplication())
+        _state.update { it.copy(settingsMessage = "正在重新连接通知监听…") }
+    }
+
     fun rescheduleReminders() {
         viewModelScope.launch {
             repository.rescheduleAllReminders()

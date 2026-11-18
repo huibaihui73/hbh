@@ -4,6 +4,8 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -53,10 +55,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import coil3.compose.AsyncImage
 import com.quntodo.app.QunTodoApp
 import com.quntodo.app.data.db.entity.RawMessageEntity
@@ -96,6 +101,7 @@ fun EditScreen(
     var imagePaths by remember(todo?.id) { mutableStateOf(todo?.imagePathList.orEmpty()) }
     var sources by remember(todo?.id) { mutableStateOf<List<RawMessageEntity>>(emptyList()) }
     var deadlineMenu by remember { mutableStateOf(false) }
+    var previewImagePath by remember { mutableStateOf<String?>(null) }
 
     val pickImages = rememberLauncherForActivityResult(
         ActivityResultContracts.PickMultipleVisualMedia(5)
@@ -272,7 +278,8 @@ fun EditScreen(
                             contentDescription = "图片",
                             modifier = Modifier
                                 .size(88.dp)
-                                .clip(RoundedCornerShape(10.dp)),
+                                .clip(RoundedCornerShape(10.dp))
+                                .clickable { previewImagePath = path },
                             contentScale = ContentScale.Crop
                         )
                         IconButton(
@@ -311,6 +318,14 @@ fun EditScreen(
                         Text("添加图片", fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                 }
+            }
+            if (imagePaths.isNotEmpty()) {
+                Text(
+                    "点击图片可放大查看",
+                    fontSize = 11.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(top = 2.dp)
+                )
             }
 
             if (sources.isNotEmpty()) {
@@ -359,6 +374,42 @@ fun EditScreen(
                     )
                 ) {
                     Text("删除这条待办")
+                }
+            }
+        }
+    }
+
+    previewImagePath?.let { path ->
+        Dialog(
+            onDismissRequest = { previewImagePath = null },
+            properties = DialogProperties(usePlatformDefaultWidth = false)
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black)
+                    .clickable { previewImagePath = null },
+                contentAlignment = Alignment.Center
+            ) {
+                AsyncImage(
+                    model = File(path),
+                    contentDescription = "查看大图",
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(12.dp),
+                    contentScale = ContentScale.Fit
+                )
+                IconButton(
+                    onClick = { previewImagePath = null },
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(16.dp)
+                ) {
+                    Icon(
+                        Icons.Default.Close,
+                        contentDescription = "关闭",
+                        tint = Color.White
+                    )
                 }
             }
         }
