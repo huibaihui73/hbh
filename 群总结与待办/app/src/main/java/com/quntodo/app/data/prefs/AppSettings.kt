@@ -9,6 +9,8 @@ data class AppSettings(
     val dateOnlyReminderHour: Int = 9,
     val remindersEnabled: Boolean = true,
     val captureEnabled: Boolean = true,
+    val captureQq: Boolean = true,
+    val captureWechat: Boolean = true,
     val capturePrivateChats: Boolean = false,
     val groupAllowlist: Set<String> = emptySet(),
     val ignoreKeywords: List<String> = emptyList(),

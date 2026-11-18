@@ -72,6 +72,7 @@ import com.quntodo.app.ui.isIgnoringBatteryOptimizations
 import com.quntodo.app.ui.isNotificationListenerEnabled
 import com.quntodo.app.ui.openBatterySettings
 import com.quntodo.app.ui.openExactAlarmSettings
+import com.quntodo.app.ui.openListenerDetailSettings
 import com.quntodo.app.ui.openListenerSettings
 import com.quntodo.app.ui.rememberResumeTick
 import com.quntodo.app.util.RuntimeState
@@ -223,6 +224,22 @@ fun SettingsScreen(
                         checked = state.settings.captureEnabled,
                         onChange = viewModel::setCaptureEnabled
                     )
+                    SwitchRow(
+                        label = "抓取 QQ 消息",
+                        checked = state.settings.captureQq,
+                        onChange = viewModel::setCaptureQq
+                    )
+                    SwitchRow(
+                        label = "抓取微信消息",
+                        checked = state.settings.captureWechat,
+                        onChange = viewModel::setCaptureWechat
+                    )
+                    Text(
+                        "可以分别关闭 QQ 或微信；关闭后对应应用的通知不会进入待整理。",
+                        fontSize = 11.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(bottom = 6.dp)
+                    )
                     HStackStatus(
                         title = "通知使用权",
                         ok = listenerEnabled,
@@ -233,9 +250,9 @@ fun SettingsScreen(
                         HStackStatus(
                             title = "监听服务",
                             ok = listenerConnected,
-                            actionLabel = if (listenerConnected) "已连接" else "重新连接",
+                            actionLabel = if (listenerConnected) "已连接" else "去修复",
                             actionEnabled = !listenerConnected
-                        ) { viewModel.reconnectListener() }
+                        ) { openListenerDetailSettings(context) }
                     }
                     SwitchRow(
                         label = "也抓取私聊消息",

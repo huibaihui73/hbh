@@ -60,6 +60,7 @@ import com.quntodo.app.ui.UiState
 import com.quntodo.app.ui.components.EmptyState
 import com.quntodo.app.ui.components.InboxBanner
 import com.quntodo.app.ui.components.TodoCard
+import com.quntodo.app.ui.openListenerDetailSettings
 import com.quntodo.app.ui.openListenerSettings
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -233,7 +234,7 @@ fun HomeScreen(
                             if (!listenerEnabled) {
                                 "通知抓取未开启，群消息不会自动进来"
                             } else {
-                                "通知监听未连接，群消息可能进不来"
+                                "通知监听未连接，请到系统设置里重新授权"
                             },
                             fontSize = 12.sp,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -245,11 +246,12 @@ fun HomeScreen(
                                     openListenerSettings(context)
                                 } else {
                                     onReconnectListener()
+                                    openListenerDetailSettings(context)
                                 }
                             }
                         ) {
                             Text(
-                                if (!listenerEnabled) "去开启" else "重连",
+                                if (!listenerEnabled) "去开启" else "去修复",
                                 fontSize = 12.sp
                             )
                         }

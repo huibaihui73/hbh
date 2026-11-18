@@ -50,6 +50,11 @@ class QqNotificationListener : NotificationListenerService() {
         val app = application as? QunTodoApp ?: return
         val settings = app.container.settingsStore.current()
         if (!settings.captureEnabled) return
+        if (sbn.packageName == "com.tencent.mm") {
+            if (!settings.captureWechat) return
+        } else if (!settings.captureQq) {
+            return
+        }
 
         val extracted = extractor.extract(sbn) ?: return
         if (extracted.generic) {

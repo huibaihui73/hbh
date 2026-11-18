@@ -36,6 +36,24 @@ fun openListenerSettings(context: Context) {
     }
 }
 
+/** 直接打开本应用的「通知使用权」详情页，用户在这里关掉再打开即可重新绑定。 */
+fun openListenerDetailSettings(context: Context) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        val opened = runCatching {
+            context.startActivity(
+                Intent(Settings.ACTION_NOTIFICATION_LISTENER_DETAIL_SETTINGS)
+                    .putExtra(
+                        Settings.EXTRA_NOTIFICATION_LISTENER_COMPONENT_NAME,
+                        ComponentName(context, QqNotificationListener::class.java).flattenToString()
+                    )
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            )
+        }.isSuccess
+        if (opened) return
+    }
+    openListenerSettings(context)
+}
+
 fun canScheduleExactAlarms(context: Context): Boolean =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         context.getSystemService(AlarmManager::class.java)?.canScheduleExactAlarms() == true

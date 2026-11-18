@@ -28,7 +28,9 @@ class NotificationExtractor {
         val conversation = extras.getCharSequence(NotificationCompat.EXTRA_CONVERSATION_TITLE)
             ?.toString()?.trim().orEmpty()
 
-        val body = if (bigText.length > text.length) bigText else text
+        val rawBody = if (bigText.length > text.length) bigText else text
+        // 微信群消息常带「[2条]发送人: 内容」的前缀，去掉它以便正确拆出发送人。
+        val body = rawBody.replaceFirst(Regex("^\\[\\d+条\\]\\s*"), "")
 
         val style = runCatching {
             NotificationCompat.MessagingStyle.extractMessagingStyleFromNotification(notification)

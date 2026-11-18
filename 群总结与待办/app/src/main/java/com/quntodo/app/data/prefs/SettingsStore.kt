@@ -29,6 +29,8 @@ class SettingsStore(private val context: Context) {
         val dateOnlyHour = intPreferencesKey("date_only_hour")
         val remindersEnabled = booleanPreferencesKey("reminders_enabled")
         val captureEnabled = booleanPreferencesKey("capture_enabled")
+        val captureQq = booleanPreferencesKey("capture_qq")
+        val captureWechat = booleanPreferencesKey("capture_wechat")
         val capturePrivate = booleanPreferencesKey("capture_private")
         val groupAllowlist = stringSetPreferencesKey("group_allowlist")
         val ignoreKeywords = stringSetPreferencesKey("ignore_keywords")
@@ -48,6 +50,8 @@ class SettingsStore(private val context: Context) {
                 dateOnlyReminderHour = prefs[Keys.dateOnlyHour] ?: 9,
                 remindersEnabled = prefs[Keys.remindersEnabled] ?: true,
                 captureEnabled = prefs[Keys.captureEnabled] ?: true,
+                captureQq = prefs[Keys.captureQq] ?: true,
+                captureWechat = prefs[Keys.captureWechat] ?: true,
                 capturePrivateChats = prefs[Keys.capturePrivate] ?: false,
                 groupAllowlist = prefs[Keys.groupAllowlist] ?: emptySet(),
                 ignoreKeywords = (prefs[Keys.ignoreKeywords] ?: emptySet()).toList().sorted(),
@@ -75,6 +79,10 @@ class SettingsStore(private val context: Context) {
     suspend fun setRemindersEnabled(enabled: Boolean) = edit { it[Keys.remindersEnabled] = enabled }
 
     suspend fun setCaptureEnabled(value: Boolean) = edit { it[Keys.captureEnabled] = value }
+
+    suspend fun setCaptureQq(value: Boolean) = edit { it[Keys.captureQq] = value }
+
+    suspend fun setCaptureWechat(value: Boolean) = edit { it[Keys.captureWechat] = value }
 
     suspend fun setCapturePrivate(value: Boolean) = edit { it[Keys.capturePrivate] = value }
 

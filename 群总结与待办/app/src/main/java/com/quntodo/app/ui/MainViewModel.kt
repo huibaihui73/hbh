@@ -451,6 +451,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch { settingsStore.setCapturePrivate(enabled) }
     }
 
+    fun setCaptureQq(enabled: Boolean) {
+        viewModelScope.launch { settingsStore.setCaptureQq(enabled) }
+    }
+
+    fun setCaptureWechat(enabled: Boolean) {
+        viewModelScope.launch { settingsStore.setCaptureWechat(enabled) }
+    }
+
     fun setGroupAllowlist(groups: Set<String>) {
         viewModelScope.launch { settingsStore.setGroupAllowlist(groups) }
     }
