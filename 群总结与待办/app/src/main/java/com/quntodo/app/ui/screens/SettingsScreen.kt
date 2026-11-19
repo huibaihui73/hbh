@@ -271,7 +271,10 @@ fun SettingsScreen(
                                 if (state.settings.groupAllowlist.isEmpty()) {
                                     "当前：抓取全部群"
                                 } else {
-                                    "当前：${state.settings.groupAllowlist.size} 个群"
+                                    val names = state.settings.groupAllowlist.sorted()
+                                    val preview = names.take(2).joinToString("、")
+                                    "当前：$preview" +
+                                        if (names.size > 2) " 等 ${names.size} 个群" else ""
                                 },
                                 fontSize = 11.sp,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -481,27 +484,57 @@ fun SettingsScreen(
     }
 
     if (showGroupDialog) {
-        val candidates = (state.inbox.map { it.groupName } + state.settings.groupAllowlist)
+        val knownGroups = (state.inbox.map { it.groupName } + state.settings.groupAllowlist)
             .distinct()
-            .sorted()
         var selected by remember(showGroupDialog) {
             mutableStateOf(state.settings.groupAllowlist.toSet())
         }
+        var newGroup by remember(showGroupDialog) { mutableStateOf("") }
+        val rows = (knownGroups + selected).distinct().sorted()
+
         AlertDialog(
             onDismissRequest = { showGroupDialog = false },
             title = { Text("只抓取这些群") },
             text = {
                 Column(
                     Modifier
-                        .heightIn(max = 380.dp)
+                        .heightIn(max = 420.dp)
                         .verticalScroll(rememberScrollState())
                 ) {
                     Text(
-                        "不勾选任何群 = 抓取全部群。列表只显示已经抓到过消息的群。",
+                        "不勾选任何群 = 抓取全部群。\n可以直接输入群名添加（要和通知里显示的群名一致），也可以在下面勾选已经抓到的群。",
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-                    candidates.forEach { group ->
+                    Row(
+                        modifier = Modifier.padding(top = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        OutlinedTextField(
+                            value = newGroup,
+                            onValueChange = { newGroup = it },
+                            placeholder = { Text("输入群聊名称", fontSize = 13.sp) },
+                            singleLine = true,
+                            modifier = Modifier.weight(1f)
+                        )
+                        TextButton(
+                            onClick = {
+                                val name = newGroup.trim()
+                                if (name.isNotEmpty()) selected = selected + name
+                                newGroup = ""
+                            },
+                            enabled = newGroup.isNotBlank()
+                        ) { Text("添加") }
+                    }
+                    if (rows.isNotEmpty()) {
+                        Text(
+                            "已添加 / 已知群聊",
+                            fontSize = 11.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(top = 8.dp)
+                        )
+                    }
+                    rows.forEach { group ->
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Checkbox(
                                 checked = group in selected,
@@ -510,6 +543,11 @@ fun SettingsScreen(
                                 }
                             )
                             Text(group, fontSize = 14.sp)
+                        }
+                    }
+                    if (selected.isNotEmpty()) {
+                        TextButton(onClick = { selected = emptySet() }) {
+                            Text("清空，改为抓取全部群", fontSize = 12.sp)
                         }
                     }
                 }

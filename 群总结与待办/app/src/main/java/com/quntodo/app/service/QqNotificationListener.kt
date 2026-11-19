@@ -64,7 +64,12 @@ class QqNotificationListener : NotificationListenerService() {
         if (!extracted.isGroup && !settings.capturePrivateChats) return
 
         val groupName = extracted.groupName.ifBlank { "未知群聊" }
-        if (settings.groupAllowlist.isNotEmpty() && groupName !in settings.groupAllowlist) return
+        if (extracted.isGroup &&
+            settings.groupAllowlist.isNotEmpty() &&
+            groupName !in settings.groupAllowlist
+        ) {
+            return
+        }
 
         val messages = extracted.parts.mapNotNull { part ->
             val content = part.content.trim()

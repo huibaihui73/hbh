@@ -460,7 +460,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun setGroupAllowlist(groups: Set<String>) {
-        viewModelScope.launch { settingsStore.setGroupAllowlist(groups) }
+        val cleaned = groups.map { it.trim() }.filter { it.isNotBlank() }.toSet()
+        viewModelScope.launch { settingsStore.setGroupAllowlist(cleaned) }
     }
 
     fun finishOnboarding() {
